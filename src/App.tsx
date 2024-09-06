@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function App() {
-  const password = "leonel";
+  const password = "ui.lndev.me";
   const [confirmPassword, setConfirmPassword] = useState("");
   const [shake, setShake] = useState(false);
 
