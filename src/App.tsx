@@ -1,8 +1,8 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function App() {
-  const password = "ui.lndev.me";
+  const password = "leonel";
   const [confirmPassword, setConfirmPassword] = useState("");
   const [shake, setShake] = useState(false);
 
@@ -60,7 +60,7 @@ export default function App() {
           <div className="w-full border-b border-dashed border-slate-200"></div>
           <div className="w-full flex flex-col gap-8 justify-center items-center h-full max-w-lg mx-auto p-16 bg-white">
             <div className="relative flex flex-col items-start justify-center w-full">
-              <span className="text-sm font-semibold">→ ui.lndev.me</span>
+              <span className="text-sm font-semibold">→ {password}</span>
               <motion.div
                 className="mb-3 mt-1 w-full border-2 py-2 px-2 rounded-xl bg-white  h-[52px]"
                 animate={{
@@ -80,22 +80,21 @@ export default function App() {
                       </div>
                     ))}
                   </div>
-                  <div className="absolute h-full left-0 w-full top-0 bottom-0 z-0 flex items-center justify-center">
-                    <AnimatePresence>
-                      {password.split("").map((letter, index) => (
-                        <motion.div
-                          key={index}
-                          className={`w-full h-full ${getLetterStatus(
-                            letter,
-                            index
-                          )}`}
-                          initial={{ width: 0 }}
-                          animate={{ width: 16 }}
-                          exit={{ width: 0 }}
-                          transition={{ duration: 0.5 }}
-                        />
-                      ))}
-                    </AnimatePresence>
+                  <div className="absolute h-full left-0 w-full top-0 bottom-0 z-0 flex items-center justify-start">
+                    {password.split("").map((letter, index) => (
+                      <motion.div
+                        key={index}
+                        className={`w-4 absolute h-full transition-all duration-300 ease ${getLetterStatus(
+                          letter,
+                          index
+                        )}`}
+                        style={{
+                          left: `${index * 16}px`,
+                          scaleX: confirmPassword[index] ? 1 : 0,
+                          transformOrigin: "left",
+                        }}
+                      ></motion.div>
+                    ))}
                   </div>
                 </div>
               </motion.div>
