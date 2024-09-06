@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function App() {
@@ -33,13 +33,21 @@ export default function App() {
       : "bg-red-500/20";
   };
 
+  const passwordsMatch = password === confirmPassword;
+
   const bounceAnimation = {
-    animate: shake
-      ? {
-          x: [-10, 10, -10, 10, 0],
-          transition: { duration: 0.5 },
-        }
-      : {},
+    x: shake ? [-10, 10, -10, 10, 0] : 0,
+    transition: { duration: 0.5 },
+  };
+
+  const matchAnimation = {
+    scale: passwordsMatch ? [1, 1.05, 1] : 1,
+    transition: { duration: 0.3 },
+  };
+
+  const borderAnimation = {
+    borderColor: passwordsMatch ? "#10B981" : "",
+    transition: { duration: 0.3 },
   };
 
   return (
@@ -54,40 +62,55 @@ export default function App() {
             <div className="relative flex flex-col items-start justify-center w-full">
               <span className="text-sm font-semibold">→ ui.lndev.me</span>
               <motion.div
-                className="mb-3 mt-1 w-full border-2 py-2 px-2 rounded-xl bg-white"
-                {...bounceAnimation}
+                className="mb-3 mt-1 w-full border-2 py-2 px-2 rounded-xl bg-white  h-[52px]"
+                animate={{
+                  ...bounceAnimation,
+                  ...matchAnimation,
+                  ...borderAnimation,
+                }}
               >
-                <div className="overflow-hidden rounded-lg relative w-fit">
+                <div className="overflow-hidden rounded-lg relative w-fit h-full">
                   <div className="py-1 px-0 h-full bg-transparent flex items-center justify-center tracking-[0.15em] z-10">
                     {password.split("").map((_, index) => (
-                      <span key={index} className="px-0.5 first:pl-1 last:pr-1">
-                        •
-                      </span>
+                      <div
+                        key={index}
+                        className="w-4 shrink-0 h-full flex items-center justify-center"
+                      >
+                        <span className="size-[5px] bg-black rounded-full"></span>
+                      </div>
                     ))}
                   </div>
-                  <div className="absolute h-full left-0 w-full top-0 bottom-0 z-0 flex">
-                    {password.split("").map((letter, index) => (
-                      <motion.div
-                        key={index}
-                        className={`w-full h-full ${getLetterStatus(
-                          letter,
-                          index
-                        )} transition-colors duration-300`}
-                        initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
-                      />
-                    ))}
+                  <div className="absolute h-full left-0 w-full top-0 bottom-0 z-0 flex items-center justify-center">
+                    <AnimatePresence>
+                      {password.split("").map((letter, index) => (
+                        <motion.div
+                          key={index}
+                          className={`w-full h-full ${getLetterStatus(
+                            letter,
+                            index
+                          )}`}
+                          initial={{ width: 0 }}
+                          animate={{ width: 16 }}
+                          exit={{ width: 0 }}
+                          transition={{ duration: 0.5 }}
+                        />
+                      ))}
+                    </AnimatePresence>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div className="w-full overflow-hidden rounded-xl">
-                <input
-                  className="w-full border-2 rounded-xl py-3 px-3.5 bg-white outline-none focus:border-slate-900 tracking-[0.375em] placeholder:tracking-normal"
+              <motion.div
+                className="w-full overflow-hidden rounded-xl h-[52px]"
+                animate={matchAnimation}
+              >
+                <motion.input
+                  className="w-full h-full border-2 rounded-xl py-3 px-3.5 bg-white outline-none focus:border-slate-900 tracking-[0.4em] placeholder:tracking-normal"
                   type="password"
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={handleConfirmPasswordChange}
+                  animate={borderAnimation}
                 />
               </motion.div>
             </div>
